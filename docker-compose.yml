@@ -27,7 +27,7 @@ services:
       - ./servers/lobby/plugins:/data/plugins
       - ./servers/lobby/server.properties:/data/server.properties
       - ./servers/lobby/ops.json:/data/ops.json
-      - ./servers/lobby/paper-global.yml:/data/config/paper-global.yml
+      - ./servers/lobby/config:/data/config
     restart: unless-stopped
 
   lobby-backup:
@@ -62,7 +62,7 @@ services:
       - ./servers/survival/plugins:/data/plugins
       - ./servers/survival/server.properties:/data/server.properties
       - ./servers/survival/ops.json:/data/ops.json
-      - ./servers/survival/paper-global.yml:/data/config/paper-global.yml
+      - ./servers/survival/config:/data/config
     restart: unless-stopped
 
   survival-backup:
