@@ -8,7 +8,7 @@ services:
       - "25577:25577"
     volumes:
       - ./velocity/velocity.toml:/config/velocity.toml
-      - ./velocity/forwarding.secret:/config/forwarding.secret
+      # - ./velocity/forwarding.secret:/config/forwarding.secret
       - ./velocity/whitelist.json:/config/whitelist.json
     restart: always
 
@@ -27,6 +27,7 @@ services:
       - ./servers/lobby/plugins:/data/plugins
       - ./servers/lobby/server.properties:/data/server.properties
       - ./servers/lobby/ops.json:/data/ops.json
+      - ./servers/lobby/paper-global.yml:/data/paper-global.yml
     restart: unless-stopped
 
   lobby-backup:
@@ -61,6 +62,7 @@ services:
       - ./servers/survival/plugins:/data/plugins
       - ./servers/survival/server.properties:/data/server.properties
       - ./servers/survival/ops.json:/data/ops.json
+      - ./servers/survival/paper-global.yml:/data/paper-global.yml
     restart: unless-stopped
 
   survival-backup:
