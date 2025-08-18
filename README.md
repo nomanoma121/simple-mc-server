@@ -1,1 +1,1 @@
-# simple-mc-server
+# Simple Minecraft Server

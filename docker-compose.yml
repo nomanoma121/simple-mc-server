@@ -1,0 +1,87 @@
+services:
+  velocity:
+    image: itzg/bungeecord
+    environment:
+      TYPE: velocity
+      DEBUG: "true"
+    ports:
+      - "25577:25577"
+    volumes:
+      - ./velocity/velocity.toml:/config/velocity.toml
+      - ./velocity/forwarding.secret:/config/forwarding.secret
+      - ./velocity/whitelist.json:/config/whitelist.json
+    restart: always
+
+  lobby:
+    image: itzg/minecraft-server
+    tty: true
+    stdin_open: true
+    environment:
+      EULA: "true"
+      TYPE: PAPER
+      MEMORY: 2G
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "password"
+    volumes:
+      - lobby-data:/data
+      - ./servers/lobby/plugins:/data/plugins
+      - ./servers/lobby/server.properties:/data/server.properties
+      - ./servers/lobby/ops.json:/data/ops.json
+    restart: unless-stopped
+
+  lobby-backup:
+    image: itzg/mc-backup
+    depends_on:
+      lobby:
+        condition: service_healthy
+    environment:
+      RCON_HOST: lobby
+      RCON_PASSWORD: "password"
+      BACKUP_METHOD: restic
+      INITIAL_DELAY: 0
+      RESTIC_PASSWORD: "password"
+      RESTIC_REPOSITORY: /backups/lobby
+      PRUNE_RESTIC_RETENTION: "--keep-daily 7 --keep-weekly 5"
+    volumes:
+      - lobby-data:/data:ro
+      - lobby-backup:/backups
+
+  survival:
+    image: itzg/minecraft-server
+    tty: true
+    stdin_open: true
+    environment:
+      EULA: "true"
+      TYPE: PAPER
+      MEMORY: 2G
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "password"
+    volumes:
+      - survival-data:/data
+      - ./servers/survival/plugins:/data/plugins
+      - ./servers/survival/server.properties:/data/server.properties
+      - ./servers/survival/ops.json:/data/ops.json
+    restart: unless-stopped
+
+  survival-backup:
+    image: itzg/mc-backup
+    depends_on:
+      survival:
+        condition: service_healthy
+    environment:
+      RCON_HOST: survival
+      RCON_PASSWORD: "password"
+      BACKUP_METHOD: restic
+      INITIAL_DELAY: 0
+      RESTIC_PASSWORD: "password"
+      RESTIC_REPOSITORY: /backups/survival
+      PRUNE_RESTIC_RETENTION: "--keep-daily 7 --keep-weekly 5"
+    volumes:
+      - survival-data:/data:ro
+      - survival-backup:/backups
+
+volumes:
+  lobby-data: {}
+  lobby-backup: {}
+  survival-data: {}
+  survival-backup: {}
