@@ -5,7 +5,7 @@ services:
       TYPE: velocity
       DEBUG: "true"
     ports:
-      - "25577:25577"
+      - "25565:25577"
     volumes:
       - ./velocity/velocity.toml:/config/velocity.toml
       # - ./velocity/forwarding.secret:/config/forwarding.secret
